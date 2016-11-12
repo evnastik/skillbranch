@@ -19,7 +19,8 @@ app.get('/task1B',  (req, res) => {
 	var fullname = req.query.fullname ? req.query.fullname : undefined;
   var names = [];
   if (fullname != undefined) {
-    var re = new RegExp('[0-9]+');
+  	fullname = fullname.trim();
+    var re = new RegExp('[0-9_/]+');
     if (re.test(fullname)) {
       res.status(200).send('Invalid fullname');
       return;
@@ -50,6 +51,34 @@ app.get('/task1B',  (req, res) => {
 
 }
   );
+
+app.get('/task2C',  (req, res) => {
+  const url = req.query.username || 'Invalid username';
+  if(url != 'Invalid username'){
+  const clean_url = url.split('?')[0];
+  var names=[];
+  names=clean_url.split('/');
+  var re = new RegExp('github');
+  var re_vk = new RegExp('(http)+(.)+(.com)+');
+    if (re.test(url)) {
+  var username = names[names.length - 2];
+    }
+    else if(re_vk.test(url)){
+  var username = names[3];
+    }else{
+  var username = names[names.length - 1];
+  }
+  if(username.charAt(0) != '@'){
+  username = '@' + username;
+
+  }
+  res.send(username);
+}else{
+  res.send(url);
+}
+}
+  );
+
 
 app.listen(3000, () => {
   console.log('Your app listening on port 3000!');
